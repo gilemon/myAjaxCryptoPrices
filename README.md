@@ -19,10 +19,10 @@ var cryptoArray = [	{"name":"EOS", "symbol":"eos", "refVal":0.72, "refDate":"08/
 					{"name":"IOTA", "symbol":"iot", "refVal":0.58, "refDate":"08/2017"}
 					];
 ```
-*name = how the Cryptocurrency will be displayed (example:BITCOIN)
-*symbol = the symbol used in the AJAX call to the API (example: btc)
-*refVal = the reference value at which your first bought the Cryptocurrency
-*refDate = the reference date at which your first bought the Cryptocurrency
+* name = how the Cryptocurrency will be displayed (example:BITCOIN)
+* symbol = the symbol used in the AJAX call to the API (example: btc)
+* refVal = the reference value at which your first bought the Cryptocurrency
+* refDate = the reference date at which your first bought the Cryptocurrency
 
 You can update currencyCompare variable to your favourite fiat currency. Example:
 
