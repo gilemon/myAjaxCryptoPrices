@@ -7,7 +7,10 @@ It is using jQuery AJAX requests to get the data from Cryptonator in the followi
 {"ticker":{"base":"BCH","target":"EUR","price":"432.04730765","volume":"","change":"-7.77825321"},"timestamp":1504547461,"success":true,"error":""}
 ```
 
-You can also use this if you need a skinny template to start a html/widget project that require asynchronous Cryptocurrencies feeds.
+You can reuse this code if you need a skinny template to start a html/widget project that require asynchronous Cryptocurrencies feeds.
+
+You can also use the raw values in “Values for copy/paste:” to update your spreadsheet or your won tailor-made offline application.
+
 
 # Configuration
 You need to update the value in the cryptoArray table in conf.js with your own values.
