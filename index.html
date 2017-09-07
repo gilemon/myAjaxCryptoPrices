@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<base href="/">
+	<meta charset="utf-8">
+	<title>my Ajax Crypto Prices</title>
+	
+	<style>				
+		body {			
+			background-color:#000;			
+			font: 75% "Helvetica Neue", Helvetica, "Arial Unicode MS", Arial, sans-serif;			
+			color:white		
+		}	    
+		#graphic:-webkit-full-screen {			
+			width: 100%;	        
+			height: 100%;	        
+			background-color: black;	    
+		}	
+		
+		.whiteBackground	{
+			margin-top: 20px;
+			width: 30%;
+    		background-color: #555;
+			color:black;	
+			padding: 10px 10px 10px 10px;
+		}
+	</style>
+	
+	<!--
+	* 2017 Gilemon
+	*  @author    Gilemon
+	-->
+	
+	<!-- Scripts -->
+
+	<script type="text/javascript">
+		var loc = window.location.pathname;
+		var dir = loc.substring(0, loc.lastIndexOf('/'));
+		var head= document.getElementsByTagName('head')[0];
+		var first = true;
+		var currencyCompare = {"name":"EURO", "symbol":"eur"};
+		var symbolToStructArray = [];
+		var last = 0;
+		var loaded = 0;
+		var tableContent = '';
+		
+		var script= document.createElement('script');
+		script.type= 'text/javascript';
+		script.src= dir + "/jquery-3.2.1.min.js?dev=" + Math.floor(Math.random() * 100);
+		head.appendChild(script);
+		script.onreadystatechange= function () 
+		{
+			if ((this.readyState == 'complete')||(this.readyState == 'loaded'))
+			{
+				init();
+			}
+		}
+		script.onload = init;
+		
+		function init()
+		{
+			console.log( "start!" + dir );
+			console.log( "start!" );
+			
+			var script= document.createElement('script');
+			script.type= 'text/javascript';
+			script.src= dir + "/conf.js?dev=" + Math.floor(Math.random() * 100);
+			head.appendChild(script);
+			script.onreadystatechange= function () 
+			{
+				if ((this.readyState == 'complete')||(this.readyState == 'loaded'))
+				{
+					init2();
+				}
+			}
+			script.onload = init2;
+		}
+		
+		function init2()
+		{
+			console.log("INIT CONF");
+			console.log(cryptoArray);
+			
+			for (var i in cryptoArray)
+			{
+				symbolToStructArray[cryptoArray[i].symbol] = cryptoArray[i];
+				symbolToStructArray[cryptoArray[i].symbol].i = i;
+				last = parseInt(i) + 1;
+			}
+			
+		    console.log( "ready!" );
+			
+			for (var i in cryptoArray)
+			{
+				console.log("crypto"+i);
+				$("#prices").append("<div id=\"crypto"+i+"\"></div>");
+			}
+			for (var i in cryptoArray)
+			{
+				var lurl = API_URL+cryptoArray[i].symbol+"-"+currencyCompare.symbol;
+				var lname = cryptoArray[i].name;
+				console.log(lname);
+				setTimeout(getAjaxRequest, i * 500, lurl, lname, i);
+			}
+		}	
+			
+		function getAjaxRequest(lurl, lname, i)
+		{		
+			$.ajax({
+			  url: lurl,
+			  context: document.body,
+			  error: function(jqXHR,error, errorThrown) {  
+				               if(jqXHR.status&&jqXHR.status==400){
+				                    alert(jqXHR.responseText + lurl); 
+				               }else{
+				                   alert("Something went wrong" + lurl);
+				               }
+				          }
+			}).done(function( data ) 
+			{
+				if(first)
+				{  
+					$("#loading").html("");
+					first = false;
+				}
+				var priceChangeText = "";
+				if(typeof symbolToStructArray[data.ticker.base.toLowerCase()].refVal !== "undefined")
+				{
+					console.log(symbolToStructArray[data.ticker.base.toLowerCase()].name);
+					var changeDiff = data.ticker.price - symbolToStructArray[data.ticker.base.toLowerCase()].refVal;
+					var changeVal =  (changeDiff/symbolToStructArray[data.ticker.base.toLowerCase()].refVal) * 100;
+					changeVal = Math.round(changeVal*100)/100;
+					var span = '<span style="color:red">';
+					if(changeDiff>0) span = '<span style="color:green">';
+					priceChangeText = " " + span +"(" + changeVal + "%)</span>";
+				}
+				
+				console.log(data.ticker.price + " " + symbolToStructArray[data.ticker.base.toLowerCase()].i);
+				$("#crypto"+symbolToStructArray[data.ticker.base.toLowerCase()].i).html("1 x " + symbolToStructArray[data.ticker.base.toLowerCase()].name + " = " + data.ticker.price + " " + currencyCompare.name + priceChangeText + "<br>");
+				
+				tableContent += data.ticker.price + "<BR>";
+				loaded++;
+				//console.log("loaded (" + last + ")= " + loaded);
+				if(loaded == last)
+				{
+					console.log("ALL loaded ");
+					$("#tableContent").html(tableContent);
+				}
+				 
+			});
+		}
+	</script>
+	<!-- end scripts -->
+</head>		
+<body>
+	<!-- Main Container -->
+	<div class="main-container">
+			<!-- Container -->
+			<div class="container">
+				<a href="/" class="logo"></a>
+				<!-- Content -->
+				<div ng-view class="content">
+					<center>
+					<div id="prices">
+						<div id="loading">loading crypto feeds...</div>
+					</div>
+					<br><h2>Values for copy/paste:</h2>
+					<div id="tableContent" class="whiteBackground">
+					</div>
+				</center>
+				</div>
+				<!-- end Content -->
+			</div>
+			<!-- end Container -->
+	</div><!-- end Main Container -->
+</body>
+</html>
