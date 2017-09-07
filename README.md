@@ -9,7 +9,7 @@ It is using jQuery AJAX requests to get the data from Cryptonator in the followi
 
 You can reuse this code if you need a skinny template to start a html/widget project that require asynchronous Cryptocurrencies feeds.
 
-You can also use the raw values in “Values for copy/paste:” to update your spreadsheet or your won tailor-made offline application.
+You can also use the raw values in “Values for copy/paste:” to update prices in your spreadsheet or your own tailor-made offline application.
 
 
 # Configuration
