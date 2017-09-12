@@ -7,7 +7,7 @@
 	
 	<style>				
 		body {			
-			background-color:#000;			
+			background-color:#222;			
 			font: 75% "Helvetica Neue", Helvetica, "Arial Unicode MS", Arial, sans-serif;			
 			color:white		
 		}	    
@@ -17,9 +17,9 @@
 			background-color: black;	    
 		}	
 		
-		.whiteBackground	{
-			margin-top: 20px;
-			width: 30%;
+		.greyBackground	{
+			display: inline-block;
+			margin-bottom: 10px;
     		background-color: #555;
 			color:black;	
 			padding: 10px 10px 10px 10px;
@@ -41,7 +41,15 @@
 		var symbolToStructArray = [];
 		var last = 0;
 		var loaded = 0;
-		var tableContent = '';
+		var tableContent = [];
+		var tableContentT = '';
+		
+		var currencyCss = "currencies_views_all_0.css"
+		var cssfile = document.createElement('link');
+		cssfile.rel = "stylesheet";
+		cssfile.type = "text/css";
+		cssfile.href = dir + "/" + currencyCss;
+		document.getElementsByTagName("head")[0].appendChild(cssfile);
 		
 		var script= document.createElement('script');
 		script.type= 'text/javascript';
@@ -59,7 +67,6 @@
 		function init()
 		{
 			console.log( "start!" + dir );
-			console.log( "start!" );
 			
 			var script= document.createElement('script');
 			script.type= 'text/javascript';
@@ -91,7 +98,6 @@
 			
 			for (var i in cryptoArray)
 			{
-				console.log("crypto"+i);
 				$("#prices").append("<div id=\"crypto"+i+"\"></div>");
 			}
 			for (var i in cryptoArray)
@@ -123,30 +129,132 @@
 					first = false;
 				}
 				var priceChangeText = "";
-				if(typeof symbolToStructArray[data.ticker.base.toLowerCase()].refVal !== "undefined")
+				var tolower = data.ticker.base.toLowerCase();
+				if(typeof symbolToStructArray[tolower].refVal !== "undefined")
 				{
-					console.log(symbolToStructArray[data.ticker.base.toLowerCase()].name);
-					var changeDiff = data.ticker.price - symbolToStructArray[data.ticker.base.toLowerCase()].refVal;
-					var changeVal =  (changeDiff/symbolToStructArray[data.ticker.base.toLowerCase()].refVal) * 100;
+					console.log(symbolToStructArray[tolower].name);
+					var changeDiff = data.ticker.price - symbolToStructArray[tolower].refVal;
+					var changeVal =  (changeDiff/symbolToStructArray[tolower].refVal) * 100;
 					changeVal = Math.round(changeVal*100)/100;
 					var span = '<span style="color:red">';
 					if(changeDiff>0) span = '<span style="color:green">';
 					priceChangeText = " " + span +"(" + changeVal + "%)</span>";
 				}
+				var symbol = "1 &#215; " + symbolToStructArray[tolower].name;
+				var classname = 's-s-'+symbolToStructArray[tolower].name.toLowerCase();
+				if(selectorInStyleSheet(currencyCss, '.' + classname))
+				{
+					symbol = "<div class=\"" + classname + " currency-logo-sprite\" style=\"display:inline-block;margin-bottom: -3px\"></div>";
+				}
+				else
+				{
+					var regex = /\s+/gi;
+					classname = classname.replace(regex , "-");
+					if(selectorInStyleSheet(currencyCss, '.' + classname))
+					{
+						symbol = "<div class=\"" + classname + " currency-logo-sprite\" style=\"display:inline-block;margin-bottom: -3px\"></div>";
+					}
+					else
+					{
+						var regex = /\s+/gi;
+						classname = 's-s-'+symbolToStructArray[tolower].name.toLowerCase().replace(regex , "");
+						if(selectorInStyleSheet(currencyCss, '.' + classname))
+						{
+							symbol = "<div class=\"" + classname + " currency-logo-sprite\" style=\"display:inline-block;margin-bottom: -3px\"></div>";
+						}
+						else
+						{
+							console.log(classname + " NOT FOUND in CSS");
+						}
+					}
+				}
 				
-				console.log(data.ticker.price + " " + symbolToStructArray[data.ticker.base.toLowerCase()].i);
-				$("#crypto"+symbolToStructArray[data.ticker.base.toLowerCase()].i).html("1 x " + symbolToStructArray[data.ticker.base.toLowerCase()].name + " = " + data.ticker.price + " " + currencyCompare.name + priceChangeText + "<br>");
+				console.log(data.ticker.price + " " + symbolToStructArray[tolower].i);
+				$("#crypto"+symbolToStructArray[tolower].i).html("<span>" + symbol + " = " + data.ticker.price + " " + currencyCompare.name + priceChangeText + "</span>");
 				
-				tableContent += data.ticker.price + "<BR>";
+				tableContent[symbolToStructArray[tolower].i] = data.ticker.price;
 				loaded++;
-				//console.log("loaded (" + last + ")= " + loaded);
 				if(loaded == last)
 				{
 					console.log("ALL loaded ");
-					$("#tableContent").html(tableContent);
+					for (var i in tableContent)
+					{
+						tableContentT += tableContent[i] + "<br>";
+					}
+					$("#tableContent").html(tableContentT);
+
+					var mybutt = document.querySelector('.js-copy-btn');
+					mybutt.addEventListener('click', function(event) {copyTextToClipboard(tableContentT);});
+					mybutt.style.visibility = 'visible';
 				}
 			});
 		}
+		
+		function copyTextToClipboard(text) 
+		{
+		  var textArea = document.createElement("textarea");
+
+		  // Place in top-left corner of screen regardless of scroll position.
+		  textArea.style.position = 'fixed';
+		  textArea.style.top = 0;
+		  textArea.style.left = 0;
+
+		  // Ensure it has a small width and height. Setting to 1px / 1em
+		  // doesn't work as this gives a negative w/h on some browsers.
+		  textArea.style.width = '2em';
+		  textArea.style.height = '2em';
+
+		  // We don't need padding, reducing the size if it does flash render.
+		  textArea.style.padding = 0;
+
+		  // Clean up any borders.
+		  textArea.style.border = 'none';
+		  textArea.style.outline = 'none';
+		  textArea.style.boxShadow = 'none';
+
+		  // Avoid flash of white box if rendered for any reason.
+		  textArea.style.background = 'transparent';
+		  
+		  var regex = /<br\s*[\/]?>/gi;
+		  textArea.value = text.replace(regex, "\n");
+
+		  document.body.appendChild(textArea);
+
+		  textArea.select();
+
+		  try {
+		    var successful = document.execCommand('copy');
+			document.execCommand("RemoveFormat");
+		    var msg = successful ? 'successful' : 'unsuccessful';
+		    console.log('Copying text command was ' + msg);
+		  } catch (err) {
+		    console.log('Oops, unable to copy');
+		  }
+
+		  document.body.removeChild(textArea);
+		}
+		
+		function selectorInStyleSheet(styleSheetName, selector) {
+		    /*
+		     * Get the index of 'styleSheetName' from the document.styleSheets object
+		     */
+		    for (var i = 0; i < document.styleSheets.length; i++) {
+		        var thisStyleSheet = document.styleSheets[i].href ? document.styleSheets[i].href.replace(/^.*[\\\/]/, '') : '';
+		        if (thisStyleSheet == styleSheetName) { var idx = i; break; }
+		    }
+		    if (!idx) return false; // We can't find the specified stylesheet
+
+		    /*
+		     * Check the stylesheet for the specified selector
+		     */
+		    var styleSheet = document.styleSheets[idx];
+		    var cssRules = styleSheet.rules ? styleSheet.rules : styleSheet.cssRules;
+		    for (var i = 0; i < cssRules.length; ++i) {
+		        if(cssRules[i].selectorText == selector) return true;
+		    }
+		    return false;
+		}
+		
 	</script>
 	<!-- end scripts -->
 </head>		
@@ -159,13 +267,14 @@
 				<!-- Content -->
 				<div ng-view class="content">
 					<center>
-					<div id="prices">
-						<div id="loading">loading crypto feeds...</div>
-					</div>
-					<br><h2>Values for copy/paste:</h2>
-					<div id="tableContent" class="whiteBackground">
-					</div>
-				</center>
+						<div id="prices" style="display: inline-block; text-align: left;">
+							<div id="loading">loading crypto feeds...</div>
+						</div>
+						<br>
+						<h3>Values for copy/paste:</h3>
+						<div id="tableContent" class="greyBackground">loading...</div>
+						<br><button class="js-copy-btn" style="visibility: hidden;">Copy to clipboard</button>
+					</center>
 				</div>
 				<!-- end Content -->
 			</div>
