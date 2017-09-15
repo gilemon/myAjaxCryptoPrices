@@ -1,5 +1,5 @@
 # myAjaxCryptoPrices
-A simple html/js client retrieving Cryptocurrencies price through an API (cryptonator).
+A simple html/js client retrieving Cryptocurrencies price through an API (cryptonator, cryptocompare).
 
 It is using jQuery AJAX requests to get the data from Cryptonator in the following format:
 
@@ -9,7 +9,7 @@ It is using jQuery AJAX requests to get the data from Cryptonator in the followi
 
 You can reuse this code if you need a skinny template to start a html/widget project that require asynchronous Cryptocurrencies feeds.
 
-You can also use the raw values in “Values for copy/paste:” to update prices in your spreadsheet or your own tailor-made offline application.
+You can also use the raw values in “Values for copy/paste:” to update prices offline in your spreadsheet or your own tailor-made application.
 
 
 # Configuration
@@ -33,9 +33,13 @@ You can update currencyCompare variable to your favourite fiat currency. Example
 var currencyCompare = {"name":"USD", "symbol":"usd"};
 ```
 
-You can find more information about Cryptonator API at https://www.cryptonator.com/api/
+The price of currencies can be averaged from multiple API feeds. You may change the API_URL variable to something else than cryptonator, but you may need to update the  priceJSONPath attribute or significantly change the code to parse the API result.
 
-You may change the API_URL variable to something else than cryptonator, but you may need to significantly change the code to parse the API result.
+```
+var  API_URL = [	{"url":"https://min-api.cryptocompare.com/data/price?fsym=$from&tsyms=$to", "priceJSONPath":"compareCurrencyUpper"},
+					{"url":"https://api.cryptonator.com/api/ticker/$from-$to", "priceJSONPath":"ticker.price"}];
+```									
+You can find more information about APIs : Cryptonator at https://www.cryptonator.com/api/ and Cryptocompare at https://www.cryptocompare.com/api
 
 # Live example
 http://gilemon.com/vrak/crypto/
