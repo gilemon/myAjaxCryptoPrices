@@ -111,6 +111,7 @@
 				for (var j in API_URL)
 				{
 					var lurl = API_URL[j].url.replace("$from", cryptoArray[i].symbol.toUpperCase());
+					lurl = lurl.replace("$nameFrom", cryptoArray[i].name.toUpperCase());
 					lurl = lurl.replace("$to", currencyCompare.symbol.toUpperCase());
 					var lsymbol = cryptoArray[i].symbol;
 					console.log(i + ":" + j + " " + lsymbol + "->" + lurl);
@@ -145,65 +146,77 @@
 				var priceChangeText = "";
 				var symbol = lsymbol;
 				var price = 0;
-				if(API_URL[j].priceJSONPath == "compareCurrencyUpper")
+				var priceJSONPath = API_URL[j].priceJSONPath.replace("$lowerto", currencyCompare.symbol.toLowerCase());
+				priceJSONPath = priceJSONPath.replace("$upperto", currencyCompare.symbol.toUpperCase());
+				console.log("priceJSONPath="+priceJSONPath);
+				if(priceJSONPath == "compareCurrencyUpper")
 				{
 					price = parseFloat(data[currencyCompare.symbol.toUpperCase()]);
 				}
 				else
 				{
-					price = parseFloat(getPathValue(data, API_URL[j].priceJSONPath));
+					price = parseFloat(getPathValue(data, priceJSONPath));
 				}
-				if (typeof tableContent[symbolToStructArray[symbol].i] !== "undefined") 
+				console.log("received price for " + symbol + "=" + price);
+				if(!isNaN(price))
 				{
-					tableContent[symbolToStructArray[symbol].i] += price;
-					tableContentInk[symbolToStructArray[symbol].i]++;
-				}
-				else
-				{
-					tableContent[symbolToStructArray[symbol].i] = price;
-					tableContentInk[symbolToStructArray[symbol].i] = 1;
-				}
-				var priceT = parseFloat(tableContent[i]/tableContentInk[i]);
-				console.log(symbol + "=" + priceT);
-				console.log(symbolToStructArray[symbol].name);
-				var changeDiff = priceT - symbolToStructArray[symbol].refVal;
-				var changeVal =  (changeDiff/symbolToStructArray[symbol].refVal) * 100;
-				changeVal = Math.round(changeVal*100)/100;
-				var span = '<span style="color:red">';
-				if(changeDiff>0) span = '<span style="color:green">';
-				priceChangeText = " " + span +"(" + changeVal + "%)</span>";
+					if (typeof tableContent[symbolToStructArray[symbol].i] !== "undefined") 
+					{
+						tableContent[symbolToStructArray[symbol].i] += price;
+						tableContentInk[symbolToStructArray[symbol].i]++;
+					}
+					else
+					{
+						tableContent[symbolToStructArray[symbol].i] = price;
+						tableContentInk[symbolToStructArray[symbol].i] = 1;
+					}
+					var priceT = parseFloat(tableContent[i]/tableContentInk[i]).toPrecision(4);
+					console.log(symbol + "=" + priceT);
+					console.log(symbolToStructArray[symbol].name);
+					var changeDiff = priceT - symbolToStructArray[symbol].refVal;
+					var changeVal =  (changeDiff/symbolToStructArray[symbol].refVal) * 100;
+					changeVal = Math.round(changeVal*100)/100;
+					var span = '<span style="color:red">';
+					if(changeDiff>0) span = '<span style="color:green">';
+					priceChangeText = " " + span +"(" + changeVal + "%)</span>";
 					
-				var symbolT = "1 &#215; " + symbolToStructArray[symbol].name;
-				var classname = 's-s-'+symbolToStructArray[symbol].name.toLowerCase();
-				if(selectorInStyleSheet(currencyCss, '.' + classname))
-				{
-					symbolT = "<div class=\"" + classname + " currency-logo-sprite\" style=\"display:inline-block;margin-bottom: -3px\"></div>";
-				}
-				else
-				{
-					var regex = /\s+/gi;
-					classname = classname.replace(regex , "-");
+					var symbolT = "1 &#215; " + symbolToStructArray[symbol].name;
+					var classname = 's-s-'+symbolToStructArray[symbol].name.toLowerCase();
+					var title = " title=\"" + symbol + "\"";
 					if(selectorInStyleSheet(currencyCss, '.' + classname))
 					{
-						symbolT = "<div class=\"" + classname + " currency-logo-sprite\" style=\"display:inline-block;margin-bottom: -3px\"></div>";
+						symbolT = "<div class=\"" + classname + " currency-logo-sprite\" style=\"display:inline-block;margin-bottom: -3px\""+title+"></div>";
 					}
 					else
 					{
 						var regex = /\s+/gi;
-						classname = 's-s-'+symbolToStructArray[symbol].name.toLowerCase().replace(regex , "");
+						classname = classname.replace(regex , "-");
 						if(selectorInStyleSheet(currencyCss, '.' + classname))
 						{
-							symbolT = "<div class=\"" + classname + " currency-logo-sprite\" style=\"display:inline-block;margin-bottom: -3px\"></div>";
+							symbolT = "<div class=\"" + classname + " currency-logo-sprite\" style=\"display:inline-block;margin-bottom: -3px\""+title+"></div>";
 						}
 						else
 						{
-							console.log(classname + " NOT FOUND in CSS");
+							var regex = /\s+/gi;
+							classname = 's-s-'+symbolToStructArray[symbol].name.toLowerCase().replace(regex , "");
+							if(selectorInStyleSheet(currencyCss, '.' + classname))
+							{
+								symbolT = "<div class=\"" + classname + " currency-logo-sprite\" style=\"display:inline-block;margin-bottom: -3px\""+title+"></div>";
+							}
+							else
+							{
+								console.log(classname + " NOT FOUND in CSS");
+							}
 						}
 					}
-				}
 				
-				console.log(priceT + " " + symbolToStructArray[symbol].i);
-				$("#crypto"+symbolToStructArray[symbol].i).html("<span>" + symbolT + " = " + priceT + " " + currencyCompare.name + priceChangeText + "</span>");
+					console.log(priceT + " " + symbolToStructArray[symbol].i);
+					$("#crypto"+symbolToStructArray[symbol].i).html("<span>" + symbolT + " = " + priceT + " " + currencyCompare.name + priceChangeText + "</span>");
+				}
+				else
+				{
+					console.log("ERROR: the API " + lurl + " or JSON PATH " + priceJSONPath + " is not returning a number");
+				}
 					
 				loaded++;
 				if(loaded == last)
