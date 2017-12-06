@@ -44,6 +44,10 @@
 		var tableContent = [];
 		var tableContentInk = [];
 		var tableContentT = '';
+		var timeoutTodisplayToCopyValues = 20; //seconds before executing displayToCopyValues
+		var timeoutTodisplayToCopyValuesLock = false;
+		
+		
 		
 		var currencyCss = "currencies_views_all_0.css"
 		var cssfile = document.createElement('link');
@@ -106,12 +110,13 @@
 			}
 			
 		    console.log( "ready!" );
+			setTimeout(function(){ if(!timeoutTodisplayToCopyValuesLock) {console.log("timeout, something wrong with an API? check the logs"); displayToCopyValues();}}, (cryptoArray.length * 2000)); //will still display something in copy/paste panel even if something goes wrong with one feed
 			for (var i in cryptoArray)
 			{
 				for (var j in API_URL)
 				{
 					var lurl = API_URL[j].url.replace("$from", cryptoArray[i].symbol.toUpperCase());
-					lurl = lurl.replace("$nameFrom", cryptoArray[i].name.toUpperCase());
+					lurl = lurl.replace("$nameFrom", cryptoArray[i].name.replace(/\s+/g, '-').toUpperCase());
 					lurl = lurl.replace("$to", currencyCompare.symbol.toUpperCase());
 					var lsymbol = cryptoArray[i].symbol;
 					console.log(i + ":" + j + " " + lsymbol + "->" + lurl);
@@ -222,13 +227,14 @@
 				if(loaded == last)
 				{
 					console.log("ALL loaded ");
-					displayToCopyValues();
+					if(!timeoutTodisplayToCopyValuesLock) displayToCopyValues();
 				}
 			});
 		}
 
 		function displayToCopyValues()
 		{
+			timeoutTodisplayToCopyValuesLock = true;
 			for (var i in tableContent)
 			{
 				tableContentT += parseFloat(tableContent[i]/tableContentInk[i]) + "<br>";
