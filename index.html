@@ -175,15 +175,16 @@
 						tableContent[symbolToStructArray[symbol].i] = price;
 						tableContentInk[symbolToStructArray[symbol].i] = 1;
 					}
-					var priceT = parseFloat(tableContent[i]/tableContentInk[i]).toPrecision(4);
+					var priceF = parseFloat(tableContent[i]/tableContentInk[i]);
+					var priceT = formatMoney(priceF, 2, ',', '.'); //.toPrecision(5)
 					console.log(symbol + "=" + priceT);
 					console.log(symbolToStructArray[symbol].name);
-					var changeDiff = priceT - symbolToStructArray[symbol].refVal;
+					var changeDiff = priceF - symbolToStructArray[symbol].refVal;
 					var changeVal =  (changeDiff/symbolToStructArray[symbol].refVal) * 100;
 					changeVal = Math.round(changeVal*100)/100;
 					var span = '<span style="color:red">';
 					if(changeDiff>0) span = '<span style="color:green">';
-					priceChangeText = " " + span +"(" + changeVal + "%)</span>";
+					priceChangeText = " " + span +"(" + formatMoney(changeVal, 0, ',', '.') + "%)</span>";
 					
 					var symbolT = "1 &#215; " + symbolToStructArray[symbol].name;
 					var classname = 's-s-'+symbolToStructArray[symbol].name.toLowerCase();
@@ -231,13 +232,24 @@
 				}
 			});
 		}
+		
+		function formatMoney(n, c, d, t)
+		{
+		    c = isNaN(c = Math.abs(c)) ? 2 : c, 
+		    d = d == undefined ? "." : d, 
+		    t = t == undefined ? "," : t, 
+		    s = n < 0 ? "-" : "", 
+		    i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))), 
+		    j = (j = i.length) > 3 ? j % 3 : 0;
+		   return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+		 };
 
 		function displayToCopyValues()
 		{
 			timeoutTodisplayToCopyValuesLock = true;
 			for (var i in tableContent)
 			{
-				tableContentT += parseFloat(tableContent[i]/tableContentInk[i]) + "<br>";
+				tableContentT += parseFloat(tableContent[i]/tableContentInk[i]).toPrecision(6) + "<br>";
 			}
 			$("#tableContent").html(tableContentT);
 
