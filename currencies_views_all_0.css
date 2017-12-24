@@ -866,7 +866,8 @@
 .s-s-sixeleven,
 .s-s-shadowcash,
 .s-s-psilocybin,
-.s-s-eos{
+.s-s-eos,
+.s-s-ada{
             background-image: url('currencies_views_all_0.png?cb8e10b779');
             background-repeat: no-repeat;
         }
@@ -6074,6 +6075,11 @@
         }
         .s-s-eos {
             background-position: -109px -368px;
+            width: 16px;
+            height: 16px;
+        }
+        .s-s-ada {
+            background-position: -141px -368px;
             width: 16px;
             height: 16px;
         }
