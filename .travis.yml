@@ -1,1 +1,14 @@
-language: html
+sudo: false
+dist: trusty
+language: python
+python:
+  - '3.6'
+
+before_install:
+  - pip install -U pip awscli
+
+install:
+  - mkdir dist/ && cp -a jquery-3.2.1.min.js index.html currencies_views_all_0.png currencies_views_all_0.css conf.js dist/
+
+# ensure dist/ exists, meaning site was copied
+script: test -d dist/
