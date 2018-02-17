@@ -1,0 +1,11 @@
+{
+    "name": "myAjaxCryptoPrices",
+    "preferGlobal": true,
+    "version": "0.0.1",
+    "author": "gilemon",
+    "description": "A simple html/js client retrieving Cryptocurrencies price through an API (cryptonator, cryptocompare).",
+    "license": "Apache",
+    "dependencies": {
+        "jquery": "~3.2.1",
+    }
+}
