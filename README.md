@@ -1,5 +1,5 @@
 # myAjaxCryptoPrices
-[![Build Status][travis-image]][travis-url] [![dependency status][dep-image]][dep-url]
+[![Build Status][travis-image]][travis-url]
 
 A simple html/js client retrieving Cryptocurrencies price through an API (cryptonator, cryptocompare).
 
@@ -48,5 +48,3 @@ http://gilemon.com/vrak/crypto/
 
 [travis-image]: https://travis-ci.org/gilemon/myAjaxCryptoPrices.svg
 [travis-url]: https://travis-ci.org/gilemon/myAjaxCryptoPrices
-[dep-image]: https://david-dm.org/gilemon/myAjaxCryptoPrices.svg
-[dep-url]: https://david-dm.org/gilemon/myAjaxCryptoPrices
