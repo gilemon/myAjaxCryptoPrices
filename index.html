@@ -83,7 +83,20 @@
 			
 			var script= document.createElement('script');
 			script.type= 'text/javascript';
-			script.src= dir + "/conf.js?dev=" + Math.floor(Math.random() * 100);
+            
+            var confsrcParam = getParameterByName('conf');
+			if(confsrcParam) 
+			{
+                confsrcParam = confsrcParam.replace(".js", "") + ".js";
+            }
+            else
+            {
+                confsrcParam = "conf.js";
+            }
+            
+            document.title = confsrcParam + " " + document.title;
+            
+			script.src= dir + "/" + confsrcParam + "?dev=" + Math.floor(Math.random() * 100);
 			head.appendChild(script);
 			script.onreadystatechange= function () 
 			{
@@ -127,7 +140,11 @@
 		}
 			
 		function getAjaxRequest(lurl, lsymbol, i, j)
-		{		
+		{	
+            var tarea_regex = /^(http(s?))\:\/\//gi;
+            if(!tarea_regex.test(lurl)) lurl = dir + "/" + lurl;
+            console.log(lurl);
+            //return;
 			$.ajax({
 			  url: lurl,
 			  context: document.body,
@@ -143,6 +160,7 @@
 	          }
 			}).done(function( data ) 
 			{
+                //console.log(data);
 				if(first)
 				{  
 					$("#loading").html("");
@@ -151,9 +169,13 @@
 				var priceChangeText = "";
 				var symbol = lsymbol;
 				var price = 0;
-				var priceJSONPath = API_URL[j].priceJSONPath.replace("$lowerto", currencyCompare.symbol.toLowerCase());
-				priceJSONPath = priceJSONPath.replace("$upperto", currencyCompare.symbol.toUpperCase());
-				console.log("priceJSONPath="+priceJSONPath);
+				var priceJSONPath = API_URL[j].priceJSONPath;
+                if(priceJSONPath.constructor !== Array)
+                {
+                    priceJSONPath = priceJSONPath.replace("$lowerto", currencyCompare.symbol.toLowerCase());
+    				priceJSONPath = priceJSONPath.replace("$upperto", currencyCompare.symbol.toUpperCase());
+                }
+                
 				if(priceJSONPath == "compareCurrencyUpper")
 				{
 					price = parseFloat(data[currencyCompare.symbol.toUpperCase()]);
@@ -215,9 +237,13 @@
 							}
 						}
 					}
-				
+                    var currencyCompareT = currencyCompare.name;
+					if (typeof symbolToStructArray[symbol].currency !== "undefined") 
+					{
+                        currencyCompareT = symbolToStructArray[symbol].currency;
+                    }
 					console.log(priceT + " " + symbolToStructArray[symbol].i);
-					$("#crypto"+symbolToStructArray[symbol].i).html("<span>" + symbolT + " = " + priceT + " " + currencyCompare.name + priceChangeText + "</span>");
+					$("#crypto"+symbolToStructArray[symbol].i).html("<span>" + symbolT + " = " + priceT + " " + currencyCompareT + priceChangeText + "</span>");
 				}
 				else
 				{
@@ -260,9 +286,19 @@
 
 		function getPathValue(o, s) 
 		{
-		    s = s.replace(/\[(\w+)\]/g, '.$1'); // convert indexes to properties
-		    s = s.replace(/^\./, '');           // strip a leading dot
-		    var a = s.split('.');
+            if(s.constructor === Array)
+            {
+                a = s;
+            }
+            else
+            {
+    		    s = s.replace(/\[(\w+)\]/g, '.$1'); // convert indexes to properties
+    		    s = s.replace(/^\./, '');           // strip a leading dot
+                var a = s.split('.');
+            }
+            console.log("getPathValue");
+            console.log(a);
+		    
 		    for (var i = 0, n = a.length; i < n; ++i) {
 		        var k = a[i];
 		        if (k in o) {
@@ -338,6 +374,16 @@
 		    }
 		    return false;
 		}
+        
+        function getParameterByName(name, url) {
+            if (!url) url = window.location.href;
+            name = name.replace(/[\[\]]/g, "\\$&");
+            var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                results = regex.exec(url);
+            if (!results) return false;
+            if (!results[2]) return false;
+            return decodeURIComponent(results[2].replace(/\+/g, " "));
+        }
 		
 	</script>
 	<!-- end scripts -->
