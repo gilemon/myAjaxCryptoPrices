@@ -5509,9 +5509,15 @@
             width: 16px;
             height: 16px;
         }
-		
+        
         .s-s-bitcoin-gold {
             background-position: -125px -368px;
+            width: 16px;
+            height: 16px;
+        }
+        
+        .s-s-bitcoin-sv {
+            background-position: -157px -368px;
             width: 16px;
             height: 16px;
         }
@@ -6858,7 +6864,8 @@
     .s-s-bitcoin-plus,
     .s-s-bitcoin-planet,
     .s-s-bitcoin-cash,
-	.s-s-bitcoin-gold,
+    .s-s-bitcoin-gold,
+    .s-s-bitcoin-sv,
     .s-s-bitcoin-21,
     .s-s-bitcoal,
     .s-s-bitcloud,
