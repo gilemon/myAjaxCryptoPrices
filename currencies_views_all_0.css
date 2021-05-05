@@ -456,6 +456,7 @@
 .s-s-incakoin,
 .s-s-impulsecoin,
 .s-s-impact,
+.s-s-iexec,
 .s-s-iconic,
 .s-s-icoin,
 .s-s-icobid,
@@ -3614,6 +3615,12 @@
             height: 16px;
         }
         
+        .s-s-iexec {
+            background-position: -173px -368px;
+            width: 16px;
+            height: 16px;
+        }
+        
         .s-s-iconic {
             background-position: -112px -336px;
             width: 16px;
@@ -6548,6 +6555,7 @@
     .s-s-incakoin,
     .s-s-impulsecoin,
     .s-s-impact,
+    .s-s-iexec,
     .s-s-iconic,
     .s-s-icoin,
     .s-s-icobid,
