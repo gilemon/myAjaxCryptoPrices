@@ -1,7 +1,7 @@
 var cryptoArray = [	{"name":"BITCOIN", "symbol":"btc", "refVal":898, "refDate":"12/2013"},
-					{"name":"LITECOIN", "symbol":"ltc", "refVal":23, "refDate":"12/2014"},
 					{"name":"DASH", "symbol":"dash", "refVal":15.7, "refDate":"12/2014"},
 					{"name":"ETHEREUM", "symbol":"eth", "refVal":41.2, "refDate":"04/2017"},
+					{"name":"LITECOIN", "symbol":"ltc", "refVal":23, "refDate":"12/2014"},
 					{"name":"Ripple", "symbol":"xrp", "refVal":0.032, "refDate":"04/2017"},
 					{"name":"DigiByte", "symbol":"dgb", "refVal":0.001134635, "refDate":"04/2017"},
 					{"name":"ReddCoin", "symbol":"rdd", "refVal":0.0006, "refDate":"05/2017"},
@@ -11,7 +11,12 @@ var cryptoArray = [	{"name":"BITCOIN", "symbol":"btc", "refVal":898, "refDate":"
 					{"name":"EOS", "symbol":"eos", "refVal":1.3, "refDate":"08/2017"},
 					{"name":"IOTA", "symbol":"iot", "refVal":0.74, "refDate":"08/2017"},
 					{"name":"NEO", "symbol":"neo", "refVal":31.6, "refDate":"08/2017"},
-					{"name":"BITCOIN GOLD", "symbol":"btg", "refVal":0.0001, "refDate":"12/2017"}
+					{"name":"BITCOIN GOLD", "symbol":"btg", "refVal":0.0001, "refDate":"12/2017"},
+					{"name":"ADA", "symbol":"ada", "refVal":0.336, "refDate":"12/2017"},
+					{"name":"VERGE", "symbol":"xvg", "refVal":0.11, "refDate":"12/2017"},
+					{"name":"STEEM", "symbol":"steem", "refVal":2.94, "refDate":"2/2018"},
+					{"name":"iExec", "symbol":"rlc", "refVal":4.5, "refDate":"5/2021"},
+					{"name":"BITCOIN SV", "symbol":"bsv", "refVal":0.1, "refDate":"2/2020"}
 					];
 					
 var currencyCompare = {"name":"&euro;", "symbol":"eur"};
@@ -19,3 +24,5 @@ var currencyCompare = {"name":"&euro;", "symbol":"eur"};
 var  API_URL = [	{"url":"https://min-api.cryptocompare.com/data/price?fsym=$from&tsyms=$to", "priceJSONPath":"compareCurrencyUpper"},
 					{"url":"https://api.cryptonator.com/api/ticker/$from-$to", "priceJSONPath":"ticker.price"},
 					{"url":"https://api.coinmarketcap.com/v1/ticker/$nameFrom/?convert=$to", "priceJSONPath":"0.price_$lowerto"}];
+
+var CHART_URL = "https://coinmarketcap.com/currencies/";

@@ -49,7 +49,7 @@
 		
 		
 		
-		var currencyCss = "currencies_views_all_0.css"
+		var currencyCss = "currencies_views_all_0.css?yo=1234"
 		var cssfile = document.createElement('link');
 		cssfile.rel = "stylesheet";
 		cssfile.type = "text/css";
@@ -132,35 +132,67 @@
 					lurl = lurl.replace("$nameFrom", cryptoArray[i].name.replace(/\s+/g, '-').toUpperCase());
 					lurl = lurl.replace("$to", currencyCompare.symbol.toUpperCase());
 					var lsymbol = cryptoArray[i].symbol;
+                    var headers = {};
+                    if (typeof API_URL[j].headers !== "undefined")
+                    {
+                        headers = API_URL[j].headers;
+                    }
+                    var paramsString = '';
+                    if (typeof API_URL[j].params !== "undefined")
+                    {
+                        var sepp = '';
+        				for (var l in API_URL[j].params)
+        				{
+                            paramsString += sepp + l + '=' + API_URL[j].params[l];
+                            sepp = '&';
+                        }
+                    }
+                    var dataType = 'json';
+                    if (typeof API_URL[j].dataType !== "undefined")
+                    {
+                        dataType = API_URL[j].dataType;
+                    }
 					console.log(i + ":" + j + " " + lsymbol + "->" + lurl);
-					setTimeout(getAjaxRequest, i * 500, lurl, lsymbol,  i, j);
+					setTimeout(getAjaxRequest, i * 500, lurl, lsymbol,  i, j, headers, paramsString, dataType);
 					last++;
 				}
 			}
 		}
 			
-		function getAjaxRequest(lurl, lsymbol, i, j)
+		function getAjaxRequest(lurl, lsymbol, i, j, headers = {}, params = '', dataType = 'json')
 		{	
+            if (!$.isEmptyObject(headers)){
+                //console.log(headers);
+                //dataType = 'jsonp'; //you may use jsonp for cross origin request
+            }
+            if (!$.isEmptyObject(params)){
+                console.log(params);
+            }
             var tarea_regex = /^(http(s?))\:\/\//gi;
             if(!tarea_regex.test(lurl)) lurl = dir + "/" + lurl;
             console.log(lurl);
             //return;
 			$.ajax({
 			  url: lurl,
+              headers: headers,
 			  context: document.body,
+			  async: true,
+			  dataType : dataType,
+			  data: params,
+			  crossDomain: true,
 			  error: function(jqXHR, error, errorThrown) {  
 				  loaded++;
 	               if(jqXHR.status&&jqXHR.status==400){
-					    console.log(error);
-	                    console.log(jqXHR.responseText + lurl); 
-	               }else{
-					   console.log(error);
-	                   console.log("Something went wrong with:" + lurl);
+                   console.log(error);
+                   console.log(jqXHR.responseText + lurl); 
+	               } else {
+					         console.log(error);
+	                 console.log("Something went wrong with:" + lurl);
 	               }
 	          }
 			}).done(function( data ) 
 			{
-                //console.log(data);
+                console.log(data);
 				if(first)
 				{  
 					$("#loading").html("");
@@ -208,8 +240,9 @@
 					if(changeDiff>0) span = '<span style="color:green">';
 					priceChangeText = " " + span +"(" + formatMoney(changeVal, 0, ',', '.') + "%)</span>";
 					
+					var longName = symbolToStructArray[symbol].name.toLowerCase();
 					var symbolT = "1 &#215; " + symbolToStructArray[symbol].name;
-					var classname = 's-s-'+symbolToStructArray[symbol].name.toLowerCase();
+					var classname = 's-s-' + longName;
 					var title = " title=\"" + symbol + "\"";
 					if(selectorInStyleSheet(currencyCss, '.' + classname))
 					{
@@ -237,7 +270,11 @@
 							}
 						}
 					}
-                    var currencyCompareT = currencyCompare.name;
+					if (typeof CHART_URL !== "undefined") 
+					{
+						symbolT = "<a href=\"" + CHART_URL + longName + "\" target=\"chart\">" + symbolT + "</a>";
+					}
+					var currencyCompareT = currencyCompare.name;
 					if (typeof symbolToStructArray[symbol].currency !== "undefined") 
 					{
                         currencyCompareT = symbolToStructArray[symbol].currency;
