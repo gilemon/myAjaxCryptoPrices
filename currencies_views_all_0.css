@@ -774,6 +774,7 @@
 .s-s-bitcoin-planet,
 .s-s-bitcoin-cash,
 .s-s-bitcoin-gold,
+.s-s-bitcoin-sv,
 .s-s-bitcoin-21,
 .s-s-bitcoal,
 .s-s-bitcloud,
@@ -868,7 +869,9 @@
 .s-s-shadowcash,
 .s-s-psilocybin,
 .s-s-eos,
-.s-s-ada{
+.s-s-ada,
+.s-s-luna,
+.s-s-matic {
             background-image: url('currencies_views_all_0.png?cb8e10b779');
             background-repeat: no-repeat;
         }
@@ -6096,6 +6099,16 @@
             width: 16px;
             height: 16px;
         }
+        .s-s-luna {
+            background-position: -189px -368px;
+            width: 16px;
+            height: 16px;
+        }
+        .s-s-matic {
+            background-position: -205px -368px;
+            width: 16px;
+            height: 16px;
+        }
         
         @media screen and (-webkit-min-device-pixel-ratio: 1.0), screen and (min--moz-device-pixel-ratio: 1.0), screen and (-o-min-device-pixel-ratio: 100/100), screen and (min-device-pixel-ratio: 1.0), screen and (min-resolution: 1.0dppx) {
             .s-s-zurcoin,
@@ -6967,7 +6980,9 @@
     .s-s-sixeleven,
     .s-s-shadowcash,
     .s-s-psilocybin,
-	.s-s-eos {
+    .s-s-eos,
+    .s-s-luna,
+    .s-s-matic {
                 background-image: url('currencies_views_all_0.png?cb8e10b779');
                 -webkit-background-size: 491px 480px;
                 -moz-background-size: 491px 480px;
