@@ -46,7 +46,7 @@
 		var tableContentT = '';
 		var timeoutTodisplayToCopyValues = 20; //seconds before executing displayToCopyValues
 		var timeoutTodisplayToCopyValuesLock = false;
-		
+		var copyValuePriceSeparator = ",";
 		
 		
 		var currencyCss = "currencies_views_all_0.css?yo=1234"
@@ -312,7 +312,7 @@
 			timeoutTodisplayToCopyValuesLock = true;
 			for (var i in tableContent)
 			{
-				tableContentT += parseFloat(tableContent[i]/tableContentInk[i]).toPrecision(6) + "<br>";
+				tableContentT += parseFloat(tableContent[i]/tableContentInk[i]).toPrecision(6).toString().replace(/\.|,/, copyValuePriceSeparator) + "<br>";
 			}
 			$("#tableContent").html(tableContentT);
 
